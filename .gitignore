@@ -205,4 +205,4 @@ secrets/
 # custom
 venv
 tmp
-./store
+store/

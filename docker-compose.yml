@@ -1,0 +1,59 @@
+volumes:
+  mgo-data:
+    driver: local
+  mgo-config:
+    driver: local
+
+
+services:
+  test:
+    container_name: ai-agent-test
+    image: ai-agent-api:dev
+    command: tail -f /dev/null
+    env_file:
+      - .env
+    volumes:
+      - ./app:/code/app
+      - ./tests:/code/tests
+      - ./store:/code/store
+    depends_on:
+      - api
+      - redis
+    restart: always
+
+  demo:
+    container_name: ai-agent-demo
+    image: ai-agent-api:dev
+    command: demo
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/code/app
+    restart: always
+
+  api:
+    container_name: ai-agent-api
+    image: ai-agent-api:dev
+    command: uvicorn app.main:app --log-level=info --host 0.0.0.0 --port 5000 --reload
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/code/app
+      - ./tests:/code/tests
+      - ./store:/code/store
+    depends_on:
+      - demo
+      - redis
+    restart: always
+
+  redis:
+    container_name: ai-agent-redis
+    image: redis:alpine
+    command: [ "redis-server", "--stop-writes-on-bgsave-error", "no" ]
+    ports:
+      - "6379:6379"
+    restart: always

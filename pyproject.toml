@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+known_first_party = ["app", "enums", "core", "task", "utils", "demo", "settings", "exceptions", "batch", "jobs", "tests", "helpers"]
+
+[flake8]
+max-line-length = 100
+extend-ignore = "E203,E701,E704"
+
+[tool.pylint.format]
+max-line-length = 100
