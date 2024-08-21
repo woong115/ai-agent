@@ -141,11 +141,6 @@ class ChatEngineLangchainImpl(ChatEngine):
         return conversational_rag_chain
 
     async def generate_chat_stream(self, session_id: str, user_message: str):
-        response = await self.retriever.ainvoke(user_message)
-        print(f"count of relevant documents: {len(response)}", flush=True)
-        for r in response:
-            print(r, flush=True)
-
         chat_stream = self.rag_chain.astream(
             {"input": user_message},
             config={"configurable": {"session_id": session_id}},
